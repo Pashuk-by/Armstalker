@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Архив ОКСОП — Личное дело № 10</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto+Mono:wght@400;500&family=Playfair+Display:wght@700&display=swap');
+
+        body {
+            background-color: #1a1a1a;
+            background-image: url('https://www.transparenttextures.com/patterns/black-felt.png');
+            font-family: 'Roboto Mono', monospace;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dossier-container {
+            max-width: 950px;
+            width: 100%;
+            background: #d9cbb1;
+            background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            border: 4px solid #5a4a3a;
+            border-radius: 4px;
+            position: relative;
+            padding: 30px;
+            color: #1a1a1a;
+        }
+
+        .dossier-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/UN_emblem_blue.svg/2048px-UN_emblem_blue.svg.png') no-repeat center;
+            background-size: 450px;
+            opacity: 0.04;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #1a1a1a;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stamp {
+            background: #1a1a1a;
+            color: #ffcc00;
+            font-family: 'Oswald', sans-serif;
+            padding: 8px 16px;
+            font-size: 20px;
+            font-weight: 700;
+            transform: rotate(-5deg);
+            border: 3px solid #ffcc00;
+            text-shadow: 2px 2px 0 #000;
+            box-shadow: 3px 3px 0 #000;
+            letter-spacing: 3px;
+        }
+
+        .title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 34px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-align: center;
+            flex-grow: 1;
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-family: 'Oswald', sans-serif;
+            font-size: 16px;
+            text-align: center;
+            margin-top: -5px;
+            opacity: 0.7;
+        }
+
+        .section {
+            border: 2px solid #1a1a1a;
+            background: rgba(255,255,255,0.25);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            border-bottom: 1px dashed #1a1a1a;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 20px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.15);
+            padding-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .data-row strong {
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .data-row span {
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .table th, .table td {
+            border: 1px solid #1a1a1a;
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        .table th {
+            background: rgba(0,0,0,0.1);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+
+        .photo-placeholder {
+            width: 130px;
+            height: 170px;
+            border: 2px solid #1a1a1a;
+            background: #bbb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            text-align: center;
+            color: #333;
+            float: right;
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .signature-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .signature-line {
+            width: 250px;
+            border-bottom: 2px solid #1a1a1a;
+            margin-bottom: 5px;
+        }
+
+        .signature-text {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 18px;
+            color: #3a3a3a;
+        }
+
+        .secret-stamp {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 150px;
+            height: 150px;
+            border: 4px solid #cc0000;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #cc0000;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transform: rotate(15deg);
+            opacity: 0.8;
+            text-align: center;
+            line-height: 1.2;
+            pointer-events: none;
+        }
+
+        .notes {
+            font-size: 13px;
+            font-style: italic;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        .classified {
+            background: rgba(200,0,0,0.1);
+            border: 2px dashed #cc0000;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .classified-header {
+            font-family: 'Oswald', sans-serif;
+            color: #cc0000;
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        @media print {
+            body { background: #fff; }
+            .dossier-container { box-shadow: none; border: 1px solid #000; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dossier-container">
+    <!-- Шапка -->
+    <div class="header">
+        <div class="stamp">СЕКРЕТНО</div>
+        <div>
+            <div class="title">Личное дело № 10</div>
+            <div class="subtitle">Объединенный Контингент Сил Охраны Периметра (ОКСОП)</div>
+        </div>
+        <div class="stamp" style="transform: rotate(5deg);">В/Ч 50720</div>
+    </div>
+
+    <!-- Фото и Основная информация -->
+    <div class="section">
+        <div class="section-header">I. Общие сведения</div>
+        <div class="photo-placeholder">
+            <span>Фото 3x4<br>(личное фото)</span>
+        </div>
+        <div class="grid">
+            <div class="data-row"><strong>Ф.И.О.:</strong> <span>Бутчев Павел Юрьевич</span></div>
+            <div class="data-row"><strong>Позывной:</strong> <span>«Бутч»</span></div>
+            <div class="data-row"><strong>Звание:</strong> <span>Майор</span></div>
+            <div class="data-row"><strong>Должность:</strong> <span>Командир взвода охраны научных групп</span></div>
+            <div class="data-row"><strong>Жетон:</strong> <span>ВС-882345</span></div>
+            <div class="data-row"><strong>Возраст:</strong> <span>38 лет (22.01.1988 г.)</span></div>
+            <div class="data-row"><strong>Гражданство:</strong> <span>РФ</span></div>
+            <div class="data-row"><strong>Семейное положение:</strong> <span>Холост</span></div>
+            <div class="data-row"><strong>Место рождения:</strong> <span>г. Пермь, Пермский край</span></div>
+            <div class="data-row"><strong>Рост / Вес:</strong> <span>184 см / 74 кг</span></div>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <!-- Физические данные -->
+    <div class="section">
+        <div class="section-header">II. Физические данные и особые приметы</div>
+        <div class="grid">
+            <div class="data-row"><strong>Телосложение:</strong> <span>Атлетическое, спортивное</span></div>
+            <div class="data-row"><strong>Группа крови:</strong> <span>II (A) Rh+</span></div>
+            <div class="data-row full-width"><strong>Особые приметы:</strong> <span>Продолговатый шрам на левой щеке (получен в ходе зачистки сектора от мутантов).</span></div>
+            <div class="data-row full-width"><strong>Предпочтительное вооружение:</strong> <span>7.62 мм ПКП «Печенег», штурмовые винтовки АК-103, АК-12</span></div>
+        </div>
+    </div>
+
+    <!-- Характер -->
+    <div class="section">
+        <div class="section-header">III. Психологический портрет и личностные качества</div>
+        <p style="font-size: 14px; line-height: 1.7;">
+            <strong>Характер:</strong> Спокойный, расчётливый, хладнокровный. Привык действовать строго по уставу и приказам. Обладает выраженными лидерскими качествами, но старается не выделяться и не конфликтовать с начальством. Строгий наставник для молодых бойцов. В бою — профессионал, предпочитает не рисковать людьми без необходимости.
+        </p>
+        <p style="font-size: 14px; line-height: 1.7;">
+            <strong>Личностные качества:</strong> Дисциплинированность, ответственность, хладнокровие, выносливость. В стрессовых ситуациях сохраняет ясность мышления. Не подвержен панике, способен принимать решения в условиях ограниченной информации.
+        </p>
+    </div>
+
+    <!-- Прохождение службы -->
+    <div class="section">
+        <div class="section-header">IV. Прохождение службы</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Должность / Часть</th>
+                    <th>Звание</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2006 — 2010</td>
+                    <td>Военный университет, г. Москва (специальность «Обеспечение военной безопасности»)</td>
+                    <td>Курсант</td>
+                </tr>
+                <tr>
+                    <td>2010 — 2015</td>
+                    <td>Южный военный округ, контртеррористические операции (Северный Кавказ)</td>
+                    <td>Лейтенант</td>
+                </tr>
+                <tr>
+                    <td>2015 — 2020</td>
+                    <td>Отдельная мотострелковая бригада, командир взвода</td>
+                    <td>Ст. лейтенант</td>
+                </tr>
+                <tr>
+                    <td>2020 — 2025</td>
+                    <td>Главное оперативное управление Генштаба — аналитический отдел</td>
+                    <td>Капитан</td>
+                </tr>
+                <tr>
+                    <td>2025 — 2026</td>
+                    <td>Подготовка к переводу в ЧЗО, курсы РХБЗ</td>
+                    <td>Майор (присвоено)</td>
+                </tr>
+                <tr>
+                    <td>Август 2026</td>
+                    <td>Прибытие в ЧЗО, ОКСОП В/Ч 50720 — Командир взвода охраны научных групп</td>
+                    <td>Майор</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Специальные навыки -->
+    <div class="section">
+        <div class="section-header">V. Специальная подготовка и навыки</div>
+        <ul style="font-size: 14px; line-height: 1.8; margin: 0; padding-left: 20px;">
+            <li>Огневая подготовка — мастер спорта по пулевой стрельбе (призовые места на всероссийских соревнованиях).</li>
+            <li>Тактическая подготовка — проходил курсы антитеррористической подготовки (спецподразделения ФСБ).</li>
+            <li>Инженерная подготовка — основы сапёрного дела, минирование и разминирование.</li>
+            <li>Медицинская подготовка — оказание первой медицинской помощи, реанимационные действия.</li>
+            <li>Радиационная защита — допуск к работе в условиях повышенной радиации (ЧЗО).</li>
+            <li>«Зелёный список» — сотрудничает с командованием ОКСОП в рамках помощи сталкерам.</li>
+        </ul>
+    </div>
+
+    <!-- Награды -->
+    <div class="section">
+        <div class="section-header">VI. Награды и поощрения</div>
+        <ul style="font-size: 14px; line-height: 1.8; margin: 0; padding-left: 20px;">
+            <li>Орден Мужества (за успешное сопровождение научной экспедиции при прорыве аномальной активности).</li>
+            <li>Ведомственные награды Министерства Обороны РФ.</li>
+            <li>Благодарность от командования ОКСОП за добросовестную службу.</li>
+        </ul>
+    </div>
+
+    <!-- Биография -->
+    <div class="section">
+        <div class="section-header">VII. Биография</div>
+        <p style="font-size: 14px; line-height: 1.7;">
+            Родился в 1988 году в городе Пермь, Пермский край, Российская Федерация. Вырос в благополучной семье военнослужащего. Отец — полковник, руководитель местного отделения ДОСААФ. Мать — директор школы. С ранних лет проявлял интерес к стрелковому спорту и военной технике.
+        </p>
+        <p style="font-size: 14px; line-height: 1.7;">
+            Окончил школу с отличием. В ходе срочной службы проявил выдающиеся результаты по огневой подготовке, был направлен на обучение в Военный университет по специальности «Обеспечение военной безопасности». По окончании обучения нёс службу в составе Южного военного округа, участвовал в контртеррористических операциях на Северном Кавказе.
+        </p>
+        <p style="font-size: 14px; line-height: 1.7;">
+            С 2015 по 2020 год командовал мотострелковым взводом, участвовал в учениях и локальных операциях. В 2020 году был переведён в аналитический отдел Главного оперативного управления, где занимался планированием операций и координацией действий специальных подразделений. В 2025 году прошёл подготовку к работе в условиях радиационного загрязнения и в августе 2026 года был направлен в распоряжение ОКСОП (в/ч 50720). По прибытии за проявленный опыт руководства и аналитические способности было присвоено звание майора. Возглавил службу безопасности научных групп.
+        </p>
+    </div>
+
+    <!-- Особые отметки (закрытая информация) -->
+    <div class="section classified">
+        <div class="classified-header">⚠️ Особые отметки (для служебного пользования)</div>
+        <p style="font-size: 14px; line-height: 1.7; color: #1a1a1a;">
+            Бутчев Павел Юрьевич имеет **личную заинтересованность** в пребывании в Чернобыльской Зоне Отчуждения. Родной брат — сталкер, известный под позывным **«Моисей»**, настоящее имя и фамилия **не установлены** (предположительно, сменил документы после ухода в Зону). Последний раз выходил на связь в 2023 году. Официально числится пропавшим без вести.
+        </p>
+        <p style="font-size: 14px; line-height: 1.7; color: #1a1a1a;">
+            Бутчев П.Ю. **подал рапорт** о переводе в ЧЗО лично, указав в качестве мотивации желание «восстановить справедливость» и «навести порядок в секторе». Командование ОКСОП осведомлено о данной мотивации, однако считает её допустимой в рамках служебной деятельности. Рекомендуется **не допускать** Бутчева к операциям, связанным с поиском лиц в Зоне, без санкции вышестоящего руководства.
+        </p>
+    </div>
+
+    <!-- Подпись и печать -->
+    <div class="signature-block">
+        <div>
+            <div class="signature-text" style="font-size: 16px; margin-bottom: 20px;">Личное дело пронумеровано, прошнуровано и скреплено печатью «для пакетов ОКСОП» — 23 листа.</div>
+            <div class="signature-line"></div>
+            <div style="font-family: 'Playfair Display', serif; font-size: 16px; margin-top: 5px;">м-р. Бутчев П. Ю.</div>
+        </div>
+    </div>
+
+    <!-- Круглая печать -->
+    <div class="secret-stamp">
+        ОКСОП<br>СИЛЫ ОХРАНЫ<br>ПЕРИМЕТРА<br>В/Ч 50720
+    </div>
+</div>
+
+</body>
+</html>

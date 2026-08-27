@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Архив ГРУ | Личный состав ОКСОП</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1a1a1a;
+            color: #c0c0c0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+        .document {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #0d0d0d;
+            border: 1px solid #333;
+            padding: 50px 60px;
+            position: relative;
+        }
+        .document::before {
+            content: "СЕКРЕТНО";
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #8b0000;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            transform: rotate(5deg);
+            border: 2px solid #8b0000;
+            padding: 4px 12px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .header .archive {
+            font-size: 20px;
+            font-weight: bold;
+            color: #8b0000;
+            letter-spacing: 6px;
+        }
+        .header .dossier {
+            font-size: 14px;
+            color: #666;
+            margin-top: 6px;
+        }
+        .header .unit {
+            font-size: 16px;
+            color: #aaa;
+            margin-top: 10px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #aaa;
+            border-bottom: 1px solid #2a2a2a;
+            padding-bottom: 6px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .section-title .secret {
+            color: #8b0000;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+        .person {
+            border: 1px solid #222;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            background: #111;
+        }
+        .person .name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .person .name .rank {
+            color: #888;
+            font-size: 16px;
+            font-weight: normal;
+            margin-left: 10px;
+        }
+        .person .call {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+        .person .call span {
+            color: #aaa;
+        }
+        .person .info-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 2px 20px;
+            margin: 12px 0 14px 0;
+        }
+        .person .info-grid .label {
+            color: #666;
+            font-size: 13px;
+        }
+        .person .info-grid .value {
+            color: #ccc;
+            font-size: 13px;
+        }
+        .person .bio {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #1a1a1a;
+            color: #b0b0b0;
+            font-size: 13px;
+            text-align: justify;
+        }
+        .person .bio .secret-mark {
+            color: #8b0000;
+            font-size: 12px;
+        }
+        .person .bio .redacted {
+            background: #1a1a1a;
+            color: #444;
+            padding: 0 12px;
+            letter-spacing: 2px;
+            border: 1px solid #222;
+        }
+        .person .bio .section-label {
+            color: #888;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .table-wrap {
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        table th {
+            background: #1a1a1a;
+            color: #888;
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid #333;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+        table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #1a1a1a;
+            color: #b0b0b0;
+        }
+        table .status-present {
+            color: #4caf50;
+        }
+        table .status-missing {
+            color: #8b0000;
+        }
+        .rules-list {
+            list-style: none;
+            padding: 0;
+        }
+        .rules-list li {
+            padding: 4px 0 4px 18px;
+            border-bottom: 1px solid #161616;
+            color: #b0b0b0;
+            font-size: 13px;
+            position: relative;
+        }
+        .rules-list li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: #444;
+        }
+        .rules-list .rule-num {
+            color: #666;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #222;
+            text-align: center;
+            color: #444;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+        .footer .stamp {
+            color: #8b0000;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        @media (max-width: 700px) {
+            .document {
+                padding: 24px 16px;
+            }
+            .person .info-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .header .archive {
+                font-size: 16px;
+            }
+            .person .name {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="document">
+
+        <div class="header">
+            <div class="archive">АРХИВ ГРУ</div>
+            <div class="dossier">Досье №2/727485 — 2/727492</div>
+            <div class="unit">ОКСОП · В/Ч 50720 · ЧЗО</div>
+            <div style="color:#555; font-size:13px; margin-top:6px;">Сформирован: август 2026 г.</div>
+        </div>
+
+        <!-- === ОБЩИЕ СВЕДЕНИЯ === -->
+        <div class="section">
+            <div class="section-title">Общие сведения <span class="secret">[секретно]</span></div>
+            <div style="color:#aaa; font-size:14px;">
+                <div><span style="color:#666;">В/Ч:</span> 50720</div>
+                <div><span style="color:#666;">Контингент:</span> ОКСОП (Объединенный Контингент Сил Охраны Периметра)</div>
+                <div><span style="color:#666;">Дислокация:</span> Чернобыльская Зона Отчуждения, КПП-1</div>
+                <div><span style="color:#666;">Год формирования:</span> август 2026</div>
+                <div><span style="color:#666;">Подчинение:</span> ООН / ГРУ РФ (оперативное)</div>
+            </div>
+        </div>
+
+        <!-- === ЛИЧНЫЙ СОСТАВ === -->
+        <div class="section">
+            <div class="section-title">Личный состав <span class="secret">[секретно]</span></div>
+
+            <!-- 1. Полковник Блуднов -->
+            <div class="person">
+                <div class="name">Блуднов В. А. <span class="rank">Полковник</span></div>
+                <div class="call">Позывной: <span>БЛУД</span></div>
+                <div class="info-grid">
+                    <div class="label">Должность</div>
+                    <div class="value">Командир дивизиона ОКСОП</div>
+                    <div class="label">Жетон</div>
+                    <div class="value">БВ-871245</div>
+                    <div class="label">Дата рождения / Возраст</div>
+                    <div class="value">22.03.1978 / 48 лет</div>
+                    <div class="label">Место рождения</div>
+                    <div class="value">г. Тула, РФ</div>
+                    <div class="label">Семейное положение</div>
+                    <div class="value">Женат, двое детей</div>
+                    <div class="label">Особые приметы</div>
+                    <div class="value">Седые виски, шрам над правой бровью (оскол.), хриплый голос, татуировка на предплечье "За ВДВ"</div>
+                    <div class="label">Предпочитаемое вооружение</div>
+                    <div class="value">ПП-19 "Витязь", АК-12</div>
+                </div>
+                <div class="bio">
+                    <span class="section-label">Биография</span>
+                    Родился в семье военного. С детства мечтал о службе. Окончил Тульское суворовское военное училище, затем Рязанское высшее воздушно-десантное командное училище. В 1999-2000 гг. участвовал во Второй чеченской кампании, награждён орденом Мужества. В 2008 году — операция по принуждению Грузии к миру. В 2014-2015 — советник в ДНР/ЛНР, занимался подготовкой местных подразделений. В 2016 году направлен в ЧЗО. За время службы неоднократно отмечался командованием. В августе 2026 года назначен командиром вновь сформированного дивизиона ОКСОП В/Ч 50720.
+                    <br /><br />
+                    <span class="section-label">Характер и стиль командования</span>
+                    Требовательный, жёсткий, но справедливый командир. Ценит дисциплину, не терпит халатности. Имеет авторитет среди подчинённых. Лично участвует в планировании операций. К сталкерам относится настороженно, но соблюдает правила взаимодействия.
+                    <br /><br />
+                    <span class="section-label">Награды</span>
+                    Орден Мужества, медаль "За отвагу", медаль "За боевые заслуги".
+                </div>
+            </div>
+
+            <!-- 2. Майор Бутчев -->
+            <div class="person">
+                <div class="name">Бутчев П. Ю. <span class="rank">Майор</span></div>
+                <div class="call">Позывной: <span>БУТЧ</span></div>
+                <div class="info-grid">
+                    <div class="label">Должность</div>
+                    <div class="value">Заместитель командира дивизиона</div>
+                    <div class="label">Жетон</div>
+                    <div class="value">АГ-784512</div>
+                    <div class="label">Дата рождения / Возраст</div>
+                    <div class="value">14.04.1988 / 38 лет</div>
+                    <div class="label">Место рождения</div>
+                    <div class="value">г. Пермь, РФ</div>
+                    <div class="label">Семейное положение</div>
+                    <div class="value">Холост</div>
+                    <div class="label">Особые приметы</div>
+                    <div class="value">Рост 184, вес 76. Продолговатый шрам на левой щеке (от скользящего ранения ПКП "Печенег"). На правом плече татуировка — дата первого боевого выхода.</div>
+                    <div class="label">Предпочитаемое вооружение</div>
+                    <div class="value">РПК-74М, АК-103 с коллиматором, ПМ</div>
+                </div>
+                <div class="bio">
+                    <span class="section-label">Биография</span>
+                    Родился 14 апреля 1988 года в городе Пермь. Отец — полковник в отставке, бывший глава управления ДОСААФ Пермского края, воевал в Афганистане. Мать — Светлана, директор школы. Младший брат Мэйсан (Муса) окончил Университет связи по специальности инженер-механик, пропал без вести после Сирийского конфликта 2015 года. Вероятное место нахождения — Чернобыльская Зона Отчуждения. Поиски результата не дали.
+                    <br /><br />
+                    В школьные годы проявил себя как способный ученик. Увлекался точными науками, но главной страстью стала стрельба. В 7-м классе занял первое место в краевых соревнованиях по пулевой стрельбе, в 9-м — выиграл Российские соревнования. Состоял в ДОСААФ: прошёл полный курс медицинской подготовки (КРАСНЫЙ КРЕСТ), обучался армейскому рукопашному бою, скалолазанию, прыжкам с парашютом, планеризму. Отец учил летать.
+                    <br /><br />
+                    После школы с лёгкостью поступил в Академию Федеральной Службы Безопасности Российской Федерации в Москве. В ходе учёбы проявил лидерские качества, отличные результаты по огневой подготовке. Побеждал в академических соревнованиях по стрельбе на большие дистанции.
+                    <br /><br />
+                    Начал службу в ФСБ РФ в звании Капитана. В 2014 году отправлен в Сирию в составе подразделения специального назначения управления "С" ("Смерч"). Задача: внедрение в отряд противника для сбора разведывательной информации. <span class="secret-mark">[СЕКРЕТНО]</span> После успешного выполнения задания группа попала под угрозу окружения. Эвакуация была частичной — прибывший вертолёт забрал не всех. Оставшиеся спецназовцы погибли, уничтожив значительную часть террористического формирования. <span class="secret-mark">[ОФИЦИАЛЬНАЯ ВЕРСИЯ]</span>
+                    <br /><br />
+                    В 2017 году переведён в ГРУ ГШ ВС РФ в звании Майора. В Центральном научно-исследовательском институте получил задачу. 1-0-1-1. Для выполнения заброшен в Чернобыльскую Зону Отчуждения в составе научной группы как начальник службы безопасности АТОМ.
+                    <br /><br />
+                    В августе 2026 года назначен заместителем командира дивизиона ОКСОП В/Ч 50720.
+                    <br /><br />
+                    <span class="section-label">Характер и стиль командования</span>
+                    Спокойный, рассудительный, но жёсткий в бою. Умеет принимать решения в критических ситуациях. С подчинёнными держится ровно, но требовательно. В Зоне адаптировался быстро — знает основные аномалии, маршруты, поведение мутантов. К сталкерам относится по уставу, но без лишней агрессии. Ценит профессионализм.
+                    <br /><br />
+                    <span class="section-label">Награды</span>
+                    Орден "За военные заслуги", медаль "За отвагу", наградное оружие — пистолет ПМ с дарственной надписью.
+                </div>
+            </div>
+
+            <!-- 3. Капитан -->
+            <div class="person">
+                <div class="name"><span class="redacted">ФАМИЛИЯ НЕ УСТАНОВЛЕНА</span> <span class="rank">Капитан</span></div>
+                <div class="call">Позывной: <span style="color:#555;">НЕ УСТАНОВЛЕН</span></div>
+                <div class="info-grid">
+                    <div class="label">Должность</div>
+                    <div class="value" style="color:#888;">Не прибыл</div>
+                    <div class="label">Жетон</div>
+                    <div class="value" style="color:#555;">ОЖИДАЕТСЯ</div>
+                    <div class="label">Дата рождения / Возраст</div>
+                    <div class="value">02.07.1994 / 32 года</div>
+                    <div class="label">Место рождения</div>
+                    <div class="value">г. Омск, РФ</div>
+                    <div class="label">Особые приметы</div>
+                    <div class="value">Рост 180, вес 78. Лёгкое заикание в стрессовых ситуациях. Татуировка на левом предплечье — волк с оскалом.</div>
+                    <div class="label">Предпочитаемое вооружение</div>
+                    <div class="value">СВД, АК-74, пистолет ГШ-18</div>
+                </div>
+                <div class="bio">
+                    <span class="section-label">Биография</span>
+                    Родился в Омске. После школы поступил в Омское высшее общевойсковое командное училище, которое окончил в 2015 году. В 2015-2016 гг. проходил службу в составе миротворческих сил в Сирии. Участвовал в боевых операциях против террористических формирований. Имеет опыт ближнего боя и городских зачисток.
+                    <br /><br />
+                    В 2017 году получил тяжелое осколочное ранение в перестрелке, полгода провёл в госпитале. После реабилитации направлен в ЧЗО для прохождения службы в ОКСОП. Прибытие в В/Ч 50720 ожидается в ближайшее время.
+                    <br /><br />
+                    <span class="section-label">Характер</span>
+                    Уравновешенный, но импульсивный в бою. Хорошо знает тактику ведения боя в городских условиях. Требователен к подчинённым, но умеет найти подход к каждому.
+                </div>
+            </div>
+
+            <!-- 4. Лейтенант -->
+            <div class="person">
+                <div class="name"><span class="redacted">ФАМИЛИЯ НЕ УСТАНОВЛЕНА</span> <span class="rank">Лейтенант</span></div>
+                <div class="call">Позывной: <span style="color:#555;">НЕ УСТАНОВЛЕН</span></div>
+                <div class="info-grid">
+                    <div class="label">Должность</div>
+                    <div class="value" style="color:#888;">Не прибыл</div>
+                    <div class="label">Жетон</div>
+                    <div class="value" style="color:#555;">ОЖИДАЕТСЯ</div>
+                    <div class="label">Дата рождения / Возраст</div>
+                    <div class="value">15.11.1999 / 27 лет</div>
+                    <div class="label">Место рождения</div>
+                    <div class="value">г. Екатеринбург, РФ</div>
+                    <div class="label">Особые приметы</div>
+                    <div class="value">Рост 175, вес 70. Отсутствует мочка левого уха (рваная рана). Быстрая речь, привычка перебивать собеседника.</div>
+                    <div class="label">Предпочитаемое вооружение</div>
+                    <div class="value">АК-12, РПГ-7В, ПМ</div>
+                </div>
+                <div class="bio">
+                    <span class="section-label">Биография</span>
+                    Родился в Екатеринбурге. Окончил Екатеринбургское суворовское военное училище, затем Московское высшее военное командное училище в 2020 году. Службу начал в должности командира взвода в Западном военном округе.
+                    <br /><br />
+                    В 2022 году направлен в ЧЗО. Был в составе группы, попавшей в засаду мутантов — выжил только он. После этого случая замкнулся, стал более осторожным и подозрительным. Проходит дополнительную подготовку перед прибытием в В/Ч 50720.
+                    <br /><br />
+                    <span class="section-label">Характер</span>
+                    Замкнутый, осторожный, но исполнительный. Имеет посттравматический синдром после гибели группы. Старается не вступать в лишние разговоры, предпочитает действия словам.
+                </div>
+            </div>
+
+            <!-- 5. Прапорщик Шматко -->
+            <div class="person">
+                <div class="name">Шматко П. В. <span class="rank">Прапорщик</span></div>
+                <div class="call">Позывной: <span>ШМАТ</span></div>
+                <div class="info-grid">
+                    <div class="label">Должность</div>
+                    <div class="value">Командир отделения материально-технического обеспечения</div>
+                    <div class="label">Жетон</div>
+                    <div class="value">БС-431256</div>
+                    <div class="label">Дата рождения / Возраст</div>
+                    <div class="value">12.09.1983 / 43 года</div>
+                    <div class="label">Место рождения</div>
+                    <div class="value">г. Брянск, РФ</div>
+                    <div class="label">Семейное положение</div>
+                    <div class="value">Разведён, двое детей (проживают с матерью)</div>
+                    <div class="label">Особые приметы</div>
+                    <div class="value">Рост 172, вес 86. Лысеет, носит усы. Шрам на шее (укус псевдособаки, 2018 год). Ходит с лёгкой хромотой на правую ногу.</div>
+                    <div class="label">Предпочитаемое вооружение</div>
+                    <div class="value">ПКМ, РПК-74, дробовик МР-153</div>
+                </div>
+                <div class="bio">
+                    <span class="section-label">Биография</span>
+                    Родился в Брянске. Окончил ПТУ по специальности слесарь-ремонтник. Срочную службу проходил в мотострелковых войсках. После демобилизации остался по контракту. Участвовал в операции в Грузии (2008). В 2014-2015 гг. — в ДНР/ЛНР, занимался обеспечением подразделений и ремонтом техники.
+                    <br /><br />
+                    В ЧЗО с 2016 года. Прошёл путь от рядового до прапорщика. Участвовал в десятках рейдов, ликвидировал несколько стай мутантов. В 2018 году был укушен псевдособакой во время патрулирования — выжил, получил шрам на шее. Отличается хладнокровием и опытом. Знает всех сталкеров в округе. Скептически относится к новобранцам, но выполняет приказы без вопросов.
+                    <br /><br />
+                    <span class="section-label">Характер</span>
+                    Грубоватый, прямолинейный, но справедливый. Ветеран Зоны, знает её законы. Ценит надёжность и преданность. С подчинёнными держится строго, но заботится о них. Имеет авторитет благодаря опыту.
+                </div>
+            </div>
+
+            <!-- 6. Старшина -->
+            <div class="person">
+                <div class="name"><span class="redacted">ФАМИЛИЯ НЕ УСТАНОВЛЕНА</span> <span class="rank">Старшина</span></div>
+                <div class="call">Позывной: <span style="color:#555;">НЕ УСТАНОВЛЕН</span></div>
+                <div class="info-grid">
+                    <div class="label">Должность</div>
+                    <div class="value" style="color:#888;">Не прибыл</div>
+                    <div class="label">Жетон</div>
+                    <div class="value" style="color:#555;">ОЖИДАЕТСЯ</div>
+                    <div class="label">Дата рождения / Возраст</div>
+                    <div class="value">08.05.1986 / 40 лет</div>
+                    <div class="label">Место рождения</div>
+                    <div class="value">г. Смоленск, РФ</div>
+                    <div class="label">Особые приметы</div>
+                    <div class="value">Рост 185, вес 80. Сильный хриплый голос, пальцы обеих рук искривлены (последствия обморожения). Татуировка "ВДВ" на груди.</div>
+                    <div class="label">Предпочитаемое вооружение</div>
+                    <div class="value">ПКП "Печенег", АК-74М</div>
+                </div>
+                <div class="bio">
+                    <span class="section-label">Биография</span>
+                    Родился в Смоленске. Окончил техникум по специальности техник-механик. Призван на срочную службу в ВДВ. После демобилизации остался по контракту. Служил в разведывательных подразделениях. Участвовал в нескольких спецоперациях.
+                    <br /><br />
+                    В 2014-2015 гг. — участие в боях на Донбассе. В 2016 году направлен в ЧЗО. Участвовал в строительстве КПП, организации обороны и патрулировании. В 2019 году находился в группе, попавшей в выброс — выжил благодаря опыту, но получил сильное обморожение пальцев рук.
+                    <br /><br />
+                    <span class="section-label">Характер</span>
+                    Ветеран Зоны, знает почти все аномалии и тропы. Практически не покидает КПП, предпочитает командовать обороной и распределять ресурсы. Жёсткий, требовательный, но уважает тех, кто прошёл через выбросы. Прибытие в В/Ч 50720 ожидается в ближайшее время.
+                </div>
+            </div>
+
+            <!-- 7. Сержант -->
+            <div class="person">
+                <div class="name"><span class="redacted">ФАМИЛИЯ НЕ УСТАНОВЛЕНА</span> <span class="rank">Сержант</span></div>
+                <div class="call">Позывной: <span style="color:#555;">НЕ УСТАНОВЛЕН</span></div>
+                <div class="info-grid">
+                    <div class="label">Должность</div>
+                    <div class="value" style="color:#888;">Не прибыл</div>
+                    <div class="label">Жетон</div>
+                    <div class="value" style="color:#555;">ОЖИДАЕТСЯ</div>
+                    <div class="label">Дата рождения / Возраст</div>
+                    <div class="value">23.11.1999 / 27 лет</div>
+                    <div class="label">Место рождения</div>
+                    <div class="value">г. Ижевск, РФ</div>
+                    <div class="label">Особые приметы</div>
+                    <div class="value">Рост 176, вес 73. Татуировка на правом плече — дата "2023". Пирсинг в левом ухе. Быстро загорает, часто обгорает на солнце.</div>
+                    <div class="label">Предпочитаемое вооружение</div>
+                    <div class="value">АК-74М, пистолет Ярыгина</div>
+                </div>
+                <div class="bio">
+                    <span class="section-label">Биография</span>
+                    Родился в Ижевске. После школы призван на срочную службу в инженерные войска. В 2021 году подписал контракт и был направлен в ЧЗО.
+                    <br /><br />
+                    За годы службы зарекомендовал себя как исполнительный, старательный боец. Участвовал в нескольких рейдах по зачистке периметра от мутантов. В 2023 году награждён медалью "За отвагу" за участие в подавлении прорыва мутантов на КПП-3.
+                    <br /><br />
+                    <span class="section-label">Характер</span>
+                    Общительный, легко находит общий язык с другими бойцами. К сталкерам относится настороженно, но без агрессии. Мечтает о повышении. Прибытие в В/Ч 50720 ожидается в ближайшее время.
+                </div>
+            </div>
+
+            <!-- 8. Рядовой -->
+            <div class="person">
+                <div class="name"><span class="redacted">ФАМИЛИЯ НЕ УСТАНОВЛЕНА</span> <span class="rank">Рядовой</span></div>
+                <div class="call">Позывной: <span style="color:#555;">НЕ УСТАНОВЛЕН</span></div>
+                <div class="info-grid">
+                    <div class="label">Должность</div>
+                    <div class="value" style="color:#888;">Не прибыл</div>
+                    <div class="label">Жетон</div>
+                    <div class="value" style="color:#555;">ОЖИДАЕТСЯ</div>
+                    <div class="label">Дата рождения / Возраст</div>
+                    <div class="value">30.01.2003 / 23 года</div>
+                    <div class="label">Место рождения</div>
+                    <div class="value">г. Курск, РФ</div>
+                    <div class="label">Особые приметы</div>
+                    <div class="value">Рост 170, вес 65. Молодое лицо, застенчивый взгляд. Постоянно носит с собой тушёнку и фотографию матери.</div>
+                    <div class="label">Предпочитаемое вооружение</div>
+                    <div class="value">АК-74 (редко стреляет)</div>
+                </div>
+                <div class="bio">
+                    <span class="section-label">Биография</span>
+                    Родился в Курске. Призван на срочную службу в 2022 году. После демобилизации подписал контракт и был направлен в ЧЗО. В Зоне всего несколько месяцев.
+                    <br /><br />
+                    Зелёный, неопытный. Боится мутантов и аномалий, но старается не подавать вида. Хочет показать себя, но часто совершает ошибки из-за волнения. Мечтает вернуться домой и отстроить дом матери.
+                    <br /><br />
+                    <span class="section-label">Характер</span>
+                    Застенчивый, исполнительный. Старается не выделяться, выполняет приказы беспрекословно. Нуждается в наставнике. Прибытие в В/Ч 50720 ожидается в ближайшее время.
+                </div>
+            </div>
+        </div>
+
+        <!-- === СВОДНАЯ ТАБЛИЦА === -->
+        <div class="section">
+            <div class="section-title">Сводная таблица личного состава</div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>№</th>
+                            <th>ФИО</th>
+                            <th>Звание</th>
+                            <th>Позывной</th>
+                            <th>Должность</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>Блуднов В. А.</td><td>Полковник</td><td>БЛУД</td><td>Командир дивизиона</td><td class="status-present">В строю</td></tr>
+                        <tr><td>2</td><td>Бутчев П. Ю.</td><td>Майор</td><td>БУТЧ</td><td>Зам. командира</td><td class="status-present">В строю</td></tr>
+                        <tr><td>3</td><td style="color:#555;">[СЕКРЕТНО]</td><td>Капитан</td><td style="color:#555;">—</td><td style="color:#888;">Не прибыл</td><td class="status-missing">Ожидается</td></tr>
+                        <tr><td>4</td><td style="color:#555;">[СЕКРЕТНО]</td><td>Лейтенант</td><td style="color:#555;">—</td><td style="color:#888;">Не прибыл</td><td class="status-missing">Ожидается</td></tr>
+                        <tr><td>5</td><td>Шматко П. В.</td><td>Прапорщик</td><td>ШМАТ</td><td>Ком. отделения МТО</td><td class="status-present">В строю</td></tr>
+                        <tr><td>6</td><td style="color:#555;">[СЕКРЕТНО]</td><td>Старшина</td><td style="color:#555;">—</td><td style="color:#888;">Не прибыл</td><td class="status-missing">Ожидается</td></tr>
+                        <tr><td>7</td><td style="color:#555;">[СЕКРЕТНО]</td><td>Сержант</td><td style="color:#555;">—</td><td style="color:#888;">Не прибыл</td><td class="status-missing">Ожидается</td></tr>
+                        <tr><td>8</td><td style="color:#555;">[СЕКРЕТНО]</td><td>Рядовой</td><td style="color:#555;">—</td><td style="color:#888;">Не прибыл</td><td class="status-missing">Ожидается</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- === ПРАВИЛА === -->
+        <div class="section">
+            <div class="section-title">Основные правила ОКСОП</div>
+            <ul class="rules-list">
+                <li><span class="rule-num">1.</span> Огонь на поражение при приближении к КПП ближе 150 м без предупреждения.</li>
+                <li><span class="rule-num">2.</span> Для сталкеров: выход на частоту, назвать позывной и цель, снять маску, убрать оружие за спину, отстегнуть магазин.</li>
+                <li><span class="rule-num">3.</span> Военные обязаны помогать учёным (кроме вооружённого конфликта).</li>
+                <li><span class="rule-num">4.</span> Запрещено открывать огонь по сталкерам в Зоне (исключение: агрессия).</li>
+                <li><span class="rule-num">5.</span> Сталкерам при виде военных — покинуть зону видимости или поднять руки (F8).</li>
+                <li><span class="rule-num">6.</span> Огонь без предупреждения по Бандитам и Монолиту.</li>
+                <li><span class="rule-num">7.</span> Патрулирование дорог и периметра, изъятие запрещённых предметов.</li>
+                <li><span class="rule-num">8.</span> Только уставная форма. За ношение чужой нашивки — расстрел.</li>
+                <li><span class="rule-num">9.</span> Изъятие КПК, раций, фото/видео техники на территории ОКСОП.</li>
+            </ul>
+        </div>
+
+        <!-- === ЗАПРЕЩЕННЫЕ ПРЕДМЕТЫ === -->
+        <div class="section">
+            <div class="section-title">Перечень запрещённых предметов</div>
+            <ul class="rules-list">
+                <li><span class="rule-num">1.</span> Автоматическое и нарезное оружие</li>
+                <li><span class="rule-num">2.</span> Артефакты</li>
+                <li><span class="rule-num">3.</span> Взрывчатые вещества</li>
+                <li><span class="rule-num">4.</span> Патроны 5,56 / 7,62 / 9x39</li>
+                <li><span class="rule-num">5.</span> Части тел мутантов</li>
+                <li><span class="rule-num">6.</span> Детекторы артефактов</li>
+                <li><span class="rule-num">7.</span> Наркотические и психотропные вещества</li>
+                <li><span class="rule-num">8.</span> Приборы для видео/фото съёмки</li>
+                <li><span class="rule-num">9.</span> Предметы экипировки «Военные»</li>
+            </ul>
+        </div>
+
+        <!-- === ПРИМЕНЕНИЕ ОРУЖИЯ === -->
+        <div class="section">
+            <div class="section-title">Положения применения огнестрельного оружия</div>
+            <ul class="rules-list">
+                <li><span class="rule-num">1.</span> Защита себя или другого лица</li>
+                <li><span class="rule-num">2.</span> Пресечение попытки завладения оружием/техникой</li>
+                <li><span class="rule-num">3.</span> Освобождение насильственно удерживаемых лиц</li>
+                <li><span class="rule-num">4.</span> Задержание нарушителя, пытающегося скрыться</li>
+                <li><span class="rule-num">5.</span> Задержание вооружённого сопротивления</li>
+                <li><span class="rule-num">6.</span> Отражение группового нападения на объекты ОКСОП</li>
+                <li><span class="rule-num">7.</span> Пресечение побега из-под стражи</li>
+                <li><span class="rule-num">8.</span> Предупредительный выстрел, сигнал тревоги</li>
+                <li><span class="rule-num">9.</span> В случае, указанном в п.1 Общих правил</li>
+            </ul>
+        </div>
+
+        <!-- === ФУТЕР === -->
+        <div class="footer">
+            <div>Документ пронумерован, прошнурован и скреплён печатью</div>
+            <div style="margin-top:4px;">"для пакетов ОКСОП" — 23 (двадцать три листа)</div>
+            <div style="margin-top:12px;">
+                <span class="stamp">ОТДЕЛЬНЫЙ КОНТИНГЕНТ СИЛ ОХРАНЫ ПЕРИМЕТРА</span><br />
+                <span style="color:#555; font-size:11px;">ОКСОП / 50720</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
